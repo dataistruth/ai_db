@@ -1,0 +1,27 @@
+[
+  {
+    "table_nm": "drug_raw",
+    "location": "/Users/mukesh.singh/spark/ai_db/data/raw/drug_raw",
+    "is_active": true
+  },
+  {
+    "table_nm": "claim_event_raw",
+    "location": "/Users/mukesh.singh/spark/ai_db/data/raw/claim_event_raw",
+    "is_active": true
+  },
+  {
+    "table_nm": "member_raw",
+    "location": "/Users/mukesh.singh/spark/ai_db/data/raw/member_raw",
+    "is_active": true
+  },
+  {
+    "table_nm": "plan_raw",
+    "location": "/Users/mukesh.singh/spark/ai_db/data/raw/plan_raw",
+    "is_active": true
+  },
+   {
+    "table_nm": "prescriber_raw",
+    "location": "/Users/mukesh.singh/spark/ai_db/data/raw/prescriber_raw",
+    "is_active": true
+  }
+]

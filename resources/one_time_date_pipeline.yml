@@ -1,0 +1,35 @@
+resources:
+  pipelines:
+    onetime_date_pipeline:
+      name: onetime_date_pipeline_${var.env}_${var.developer}
+      description: " Runs the date creation DLT pipeline — ${var.env}"
+
+      catalog: ${var.catalog}
+      target:  ${var.env}_${var.developer}_silver        # schema where DLT publishes tables
+
+      serverless: true
+      environment:
+          dependencies:
+            - ${var.libs_volume}/common_utils-1.0.0-py3-none-any.whl
+      # ── bundle-injected spark conf ─────────────────────────────────
+      configuration:
+        bundle.catalog:       ${var.catalog}
+        bundle.env:           ${var.env}
+        bundle.developer:     ${var.developer}
+        bundle.schema.bronze: ${var.env}_${var.developer}_bronze
+        bundle.schema.silver: ${var.env}_${var.developer}_silver
+        bundle.schema.gold:   ${var.env}_${var.developer}_gold
+        bundle.sourcePath: ${workspace.file_path}
+
+      # ── libraries ──────────────────────────────────────────────────
+      libraries:
+        - notebook:
+            path: ../src/silver/pipelines/generate_date.py
+        - whl:
+            artifact: common_utils_lib        # DAB resolves path automatically
+
+      # ── channel ────────────────────────────────────────────────────
+      channel: CURRENT
+
+      # ── continuous vs triggered ────────────────────────────────────
+      continuous: false                       # triggered mode — job controls it

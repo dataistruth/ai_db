@@ -1,0 +1,24 @@
+resources:
+  jobs:
+    bronze_job:
+      name: bronze_job
+
+      tasks:
+        - task_key: bronze_task
+
+          notebook_task:
+            notebook_path: ../src/bronze/pipelines/ingest_bronze.py   # no .py
+            base_parameters:
+              config: config/bronze_ingestion.json
+              catalog: ${var.catalog}
+              schema: ${resources.schemas.bronze_schema.name}
+
+          environment_key: my_env
+
+      environments:
+        - environment_key: my_env
+          spec:
+            environment_version: "3"
+
+            libraries:   # ✅ FIXED indentation
+              - whl: /Volumes/${var.catalog}/${resources.schemas.bronze_schema.name}/libs/platform_libs/common_utils-latest.whl

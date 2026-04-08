@@ -1,0 +1,35 @@
+resources:
+
+  schemas:
+
+    bronze_schema:
+      name: bronze
+      catalog_name: ${var.catalog}
+      comment: "Bronze layer"
+
+    silver_schema:
+      name: silver
+      catalog_name: ${var.catalog}
+      comment: "Silver layer"
+
+    gold_schema:
+      name: gold
+      catalog_name: ${var.catalog}
+      comment: "Gold layer"
+
+  volumes:
+    bronze_raw_volume:
+      name: raw
+      catalog_name: ${var.catalog}
+      schema_name: bronze
+      volume_type: MANAGED
+      comment: "Raw ingestion data"
+
+    bronze_libs_volume:
+      name: libs
+      catalog_name: ${var.catalog}
+      schema_name: bronze
+      volume_type: MANAGED
+      comment: "Shared Python wheels"
+
+

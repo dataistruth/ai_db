@@ -1,0 +1,79 @@
+bundle:
+  name: ai_db
+
+# ── include all resource yml files ───────────────────────────────────────
+include:
+  - resources/*.yml
+  - jobs/*.yml
+
+artifacts:
+  common_utils_lib:
+    type: whl
+    path: ../common_utils    # relative path to the library
+    build: poetry build
+
+# ── global variables ──────────────────────────────────────────────────────
+variables:
+
+  catalog:
+    description: Unity Catalog name
+    default: ai_db
+
+  env:
+    description: Deployment environment
+    default: dev
+
+  developer:
+    description: Developer short name — used for schema isolation in dev
+    default: shared              # qa and prod use shared schemas
+
+
+  src_path:
+      default: ${workspace.file_path}/src
+
+  libs_volume:
+    description: UC Volume path for shared libraries
+    default: /Volumes/ai_dev_db/dev_msingh_bronze/libs/platform_libs
+
+
+
+# ── targets ───────────────────────────────────────────────────────────────
+targets:
+
+  dev:
+    default: true
+    mode: development
+    workspace:
+      profile: dev_w
+    variables:
+      catalog: ai_dev_db
+      libs_volume: /Volumes/ai_dev_db/dev_msingh_bronze/libs/platform_libs
+      env: dev
+      developer: ${workspace.current_user.short_name}   # each dev gets own schema
+
+  qa:
+    mode: production
+    workspace:
+      profile: qa_w
+    variables:
+      catalog: ai_qa_db
+      libs_volume: /Volumes/ai_qa_db/shared/libs/platform_libs
+      env: qa
+      developer: shared          # shared schemas in qa
+
+  prod:
+    mode: production
+    workspace:
+      profile: prod_w
+    variables:
+      libs_volume: /Volumes/ai_qa_db/shared/libs/platform_libs
+      catalog: ai_db
+      env: prod
+      developer: shared          # shared schemas in prod
+
+# ── sync local files to workspace ────────────────────────────────────────
+sync:
+  paths:
+    - src
+    - config
+    - resources
