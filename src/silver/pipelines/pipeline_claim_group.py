@@ -5,6 +5,7 @@ from pyspark.sql.functions import col
 sys.path.insert(0, spark.conf.get("bundle.sourcePath") + "/src")
 from silver.transform.transform_dim import ( transform_dim_drug, transform_dim_member,
 transform_dim_plan, transform_dim_prescriber )
+from silver.transform.transform_fact import transform_fact_claim
 from common_utils.constants import ALL_AUDIT_COLS
 from pyspark.sql.functions import col, expr
 
@@ -122,3 +123,24 @@ dlt.apply_changes(
     stored_as_scd_type=2,
     except_column_list = ["insert_ts"]
 )
+
+
+@dlt.table(name="fact_claim")
+def fact_claim():
+    bronze_table = f"{catalog}.{schema_bronze}.fact_raw"
+    input_df=dlt.read_table(bronze_table)
+    member_sk_df = dlt.read_table("d_member").select("member_id","member_sk")
+    plan_sk_df = dlt.read_table("d_plan").select("plan_id","plan_sk")
+    prescriber_sk_df = dlt.read_table("d_prescriber").select("prescriber_id","prescriber_sk")
+    drug_sk_df = dlt.read_table("d_drug").select("drug_code","drug_sk")
+    date_df = dlt.read_table("d_date")
+    return(input_df
+       .transform(transform_fact_claim,
+                  member_sk_df,
+                  plan_sk_df,
+                  prescriber_sk_df,
+                  drug_sk_df,
+                  date_df)
+
+    )
+
