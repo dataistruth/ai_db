@@ -64,7 +64,7 @@ def transform_fact_claim(input_df:DataFrame,
         "days_supply": F.col("days_supply").cast("int"),
         "quantity": F.col("quantity").cast("int"),
 
-        "fill_date": F.col("fill_date").cast("date"),
+        "fill_date": F.to_date(F.col("fill_date")),
         "insert_ts": F.to_timestamp(F.col("ingestion_ts")),
 
         "refill_flag": F.when(
@@ -91,7 +91,7 @@ def transform_fact_claim(input_df:DataFrame,
     transform_df = (join_df
                 .withColumns(transform_expr)
                 .select(*transform_expr.keys())
-                .dropDuplicate("claim_sk")
+                .dropDuplicates(["claim_sk"])
     )
     return transform_df
 
