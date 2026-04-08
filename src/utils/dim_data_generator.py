@@ -11,21 +11,22 @@ import subprocess
 # Config (Environment-Aware)
 # -------------------------------
 def is_databricks():
-    # ---------------------------- ---
-    # Ensure Faker is Installed (Databricks Serverless)
-    # -------------------------------
-    def ensure_faker():
-        try:
-            from faker import Faker
-        except ImportError:
-            if is_databricks():
-                print("Installing faker in Databricks environment...")
-                subprocess.check_call([sys.executable, "-m", "pip", "install", "faker"])
-            else:
-                raise
-
-    ensure_faker()
     return "DATABRICKS_RUNTIME_VERSION" in os.environ
+
+# -------------------------------
+# Ensure Faker is Installed (Databricks Serverless)
+# -------------------------------
+def ensure_faker():
+    try:
+        from faker import Faker
+    except ImportError:
+        if is_databricks():
+            print("Installing faker in Databricks environment...")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "faker"])
+        else:
+            raise
+
+ensure_faker()
 # Now safe to import
 from faker import Faker
 
@@ -149,11 +150,11 @@ def run_all():
 # Main Entry
 # -------------------------------
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
+    if len(sys.argv) == 1 or len(sys.argv) == 3:
         # No argument → generate all datasets
         run_all()
 
-    elif len(sys.argv) == 2:
+    elif len(sys.argv) == 2 or len(sys.argv) == 4:
         # One argument → generate specific dataset
         run_one(sys.argv[1])
 

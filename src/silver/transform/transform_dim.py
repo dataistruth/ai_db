@@ -9,7 +9,7 @@ def transform_dim_drug(df: DataFrame ) -> DataFrame:
         "drug_code": F.col("drug_code").cast("string"),
         "drug_name": F.col("drug_name"),
         "drug_class": F.col("drug_class"),
-        "drug_sk": sk_hash_expr(["drug_code", "drug_name"]),
+        "drug_sk": sk_hash_expr(["drug_code"]),
         "insert_ts": F.current_timestamp(),
     }
 
@@ -41,7 +41,7 @@ def transform_dim_member(df: DataFrame) -> DataFrame:
     # ── pass 2: derived columns that depend on pass-1 results ─────────────────
     derived_expr: dict = {
         "age"       : F.floor(F.datediff(F.current_date(), F.col("dob")) / 365),
-        "member_sk" : sk_hash_expr(["member_id", "dob", "full_name"]),
+        "member_sk" : sk_hash_expr(["member_id"]),
     }
 
     # ── final select = all keys across both passes ─────────────────────────────
@@ -60,7 +60,7 @@ def transform_dim_plan(df:DataFrame)-> DataFrame:
                 "plan_id" :F.col("plan_id") ,
                 "plan_name" :F.lower(F.col("plan_name")) ,
                 "plan_type" : F.lower(F.col("plan_type") ) ,
-                "plan_sk" : sk_hash_expr(["plan_id","plan_type"]) ,
+                "plan_sk" : sk_hash_expr(["plan_id"]) ,
                 "insert_ts" :F.to_timestamp(F.col("ingestion_ts"))
     }
     plan_df=(df
@@ -84,7 +84,7 @@ def transform_dim_prescriber(df: DataFrame) -> DataFrame:
 
     # ── pass 2: derived columns that depend on pass-1 results ─────────────────────
     transform_dim_prescriber_derived_expr: dict = {
-        "prescriber_sk": sk_hash_expr(["prescriber_id", "full_name"]),
+        "prescriber_sk": sk_hash_expr(["prescriber_id"]),
     }
 
     # ── final select = all keys across both passes ─────────────────────────────────

@@ -1,13 +1,32 @@
 import json
 import os
 import random
+import subprocess
+import sys
 from datetime import datetime, timedelta
-from faker import Faker
 import uuid
 
-base_path = "/Users/mukesh.singh/spark/ai_db/data/raw/claim_event_raw"
+
+def ensure_faker():
+    try:
+        from faker import Faker
+    except ImportError:
+        if "DATABRICKS_RUNTIME_VERSION" in os.environ:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "faker"])
+        else:
+            raise
+
+
+ensure_faker()
+from faker import Faker
+
+#base_path = "/Users/mukesh.singh/spark/ai_db/data/raw/claim_event_raw"
 fake = Faker()
 
+if "DATABRICKS_RUNTIME_VERSION" in os.environ:
+    base_path = "/Volumes/ai_dev_db/dev_msingh_bronze/raw/claim_event_raw"
+else:
+    base_path = "/Users/mukesh.singh/spark/ai_db/data/raw/claim_event_raw"
 
 # -------------------------------
 # Predefined Dimension Ranges
@@ -28,6 +47,7 @@ def generate_claim_events(n=200):
 
         record = {
             # Event metadata
+            "claim_id": f"CL{random.randint(1, 100000):04}",
             "event_id": str(uuid.uuid4()),
             "event_type": random.choice(["INSERT", "UPDATE", "DELETE"]),
             "event_timestamp": event_time.isoformat(),
