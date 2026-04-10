@@ -4,7 +4,9 @@ bundle:
 # ── include all resource yml files ───────────────────────────────────────
 include:
   - resources/*.yml
+  - resources/*/*.yml
   - jobs/*.yml
+  - jobs/*/*.yml
 
 artifacts:
   common_utils_lib:
@@ -35,6 +37,21 @@ variables:
     description: UC Volume path for shared libraries
     default: /Volumes/ai_dev_db/dev_msingh_bronze/libs/platform_libs
 
+  gold_schema:
+    description: "Gold layer schema name"
+    default: gold
+
+  silver_schema:
+      description: "Silver layer schema name"
+      default: silver
+
+  bronze_schema:
+      description: "Bronze layer schema name"
+      default: bronze
+
+  warehouse_http_path:
+    default: "/sql/1.0/warehouses/00d71a4889fb3e3c"
+
 
 
 # ── targets ───────────────────────────────────────────────────────────────
@@ -50,6 +67,9 @@ targets:
       libs_volume: /Volumes/ai_dev_db/dev_msingh_bronze/libs/platform_libs
       env: dev
       developer: ${workspace.current_user.short_name}   # each dev gets own schema
+      gold_schema : dev_msingh_gold
+      silver_schema: dev_msingh_silver
+      bronze_schema: dev_msingh_bronze
 
   qa:
     mode: production

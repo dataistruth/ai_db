@@ -55,6 +55,7 @@ def transform_fact_claim(input_df:DataFrame,
 
 # Write the trasnform
     transform_expr = {
+        "claim_id" : F.col("claim_id"),
         "member_sk": F.col("member_sk"),
         "plan_sk": F.col("plan_sk"),
         "prescriber_sk": F.col("prescriber_sk"),
