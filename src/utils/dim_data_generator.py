@@ -34,7 +34,7 @@ from faker import Faker
 if is_databricks():
     BASE_PATH = "/Volumes/ai_dev_db/dev_msingh_bronze/raw"
 else:
-    BASE_PATH = "/Users/mukesh.singh/spark/ai_db/data/raw"
+    BASE_PATH = "/Users/mukeshsingh/spark/ai_db/data/raw"
 
 
 fake = Faker()
