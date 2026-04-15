@@ -2,22 +2,18 @@ resources:
   jobs:
     bronze_job:
       name: bronze_job
-
       tasks:
         - task_key: bronze_task
-
           notebook_task:
-            notebook_path: ../src/bronze/pipelines/ingest_bronze.py   # no .py
+            notebook_path: ../src/bronze/pipelines/ingest_bronze.py
             base_parameters:
               config: config/bronze_ingestion.json
               catalog: ${var.catalog}
               schema: ${var.schema_bronze}
-
-          environment_key: my_env
 
       environments:
         - environment_key: my_env
           spec:
             environment_version: "3"
             dependencies:
-              - /Volumes/ai_dev_db/dev_msingh_bronze/libs/platform_libs/common_utils-0.1.0-py3-none-any.whl
+              - /Volumes/${var.catalog}/${var.schema_bronze}/libs/platform_libs/common_utils-0.1.0-py3-none-any.whl
