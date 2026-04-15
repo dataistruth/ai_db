@@ -1,5 +1,5 @@
 bundle:
-  name: ai_db
+  name: ai
 
 # ── include all resource yml files ───────────────────────────────────────
 include:
@@ -17,7 +17,7 @@ variables:
 
   catalog:
     description: Unity Catalog name
-    default: ai_db
+    default: db
 
   env:
     description: Deployment environment
@@ -33,7 +33,19 @@ variables:
 
   libs_volume:
     description: UC Volume path for shared libraries
-    default: /Volumes/ai_dev_db/dev_msingh_bronze/libs/platform_libs
+    default: /Volumes/db/bronze/libs/platform_libs
+
+  schema_bronze:
+    description: Bronze schema
+    default: bronze
+
+  schema_silver:
+      description: Silver schema
+      default: silver
+
+  schema_gold:
+      description: Gold schema
+      default: gold
 
 
 
@@ -46,10 +58,13 @@ targets:
     workspace:
       profile: dev_w
     variables:
-      catalog: ai_dev_db
+      catalog: dev_db
       libs_volume: /Volumes/ai_dev_db/dev_msingh_bronze/libs/platform_libs
       env: dev
-      developer: ${workspace.current_user.short_name}   # each dev gets own schema
+      developer: ${workspace.current_user.short_name}
+      schema_bronze: dev_${workspace.current_user.short_name}_bronze
+      schema_silver: dev_${workspace.current_user.short_name}_silver
+      schema_gold: dev_${workspace.current_user.short_name}_gold# each dev gets own schema
 
   qa:
     mode: production
@@ -65,11 +80,16 @@ targets:
     mode: production
     workspace:
       profile: prod_w
+      root_path: /Workspace/Users/msingh.chicago26@protonmail.com/.bundle/${bundle.name}/${bundle.target}
     variables:
-      libs_volume: /Volumes/ai_qa_db/shared/libs/platform_libs
-      catalog: ai_db
+      libs_volume: /Volumes/db/shared/libs/platform_libs
+      catalog: db
       env: prod
-      developer: shared          # shared schemas in prod
+      developer: shared
+      schema_bronze: bronze
+      schema_silver: silver
+      schema_gold: gold
+      # shared schemas in prod
 
 # ── sync local files to workspace ────────────────────────────────────────
 sync:

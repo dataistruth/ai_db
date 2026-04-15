@@ -8,12 +8,12 @@ resources:
       comment: "Bronze layer"
 
     silver_schema:
-      name: silver
+      name: ${var.schema_silver}
       catalog_name: ${var.catalog}
       comment: "Silver layer"
 
     gold_schema:
-      name: gold
+      name: ${var.schema_gold}
       catalog_name: ${var.catalog}
       comment: "Gold layer"
 
@@ -21,14 +21,14 @@ resources:
     bronze_raw_volume:
       name: raw
       catalog_name: ${var.catalog}
-      schema_name: bronze
+      schema_name: ${var.schema_bronze}
       volume_type: MANAGED
       comment: "Raw ingestion data"
 
     bronze_libs_volume:
       name: libs
       catalog_name: ${var.catalog}
-      schema_name: bronze
+      schema_name: ${var.schema_bronze}
       volume_type: MANAGED
       comment: "Shared Python wheels"
 
