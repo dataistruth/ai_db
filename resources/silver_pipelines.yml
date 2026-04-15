@@ -5,7 +5,7 @@ resources:
       description: " silver_claim_daily DLT pipeline — ${var.env}"
 
       catalog: ${var.catalog}
-      target:  ${var.env}_${var.developer}_silver        # schema where DLT publishes tables
+      target:  ${var.schema_silver}       # schema where DLT publishes tables
 
       serverless: true
       environment:

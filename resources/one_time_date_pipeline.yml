@@ -1,35 +1,30 @@
 resources:
   pipelines:
-    onetime_date_pipeline:
-      name: onetime_date_pipeline_${var.env}_${var.developer}
-      description: " Runs the date creation DLT pipeline — ${var.env}"
+    one_time_date_pipeline:
+      name: one_time_date_pipeline_${var.env}_${var.developer}
+      description: "Create d_date dimension — ${var.env}"
 
       catalog: ${var.catalog}
-      target:  ${var.env}_${var.developer}_silver        # schema where DLT publishes tables
+      target:  ${var.schema_silver}
 
-      serverless: true
+      serverless: true        # ← indented under pipeline ✅
       environment:
-          dependencies:
-            - ${var.libs_volume}/common_utils-1.0.0-py3-none-any.whl
-      # ── bundle-injected spark conf ─────────────────────────────────
-      configuration:
+        dependencies:
+          - ${var.libs_volume}/common_utils-1.0.0-py3-none-any.whl
+
+      configuration:          # ← indented under pipeline ✅
         bundle.catalog:       ${var.catalog}
         bundle.env:           ${var.env}
         bundle.developer:     ${var.developer}
-        bundle.schema.bronze: ${var.env}_${var.developer}_bronze
-        bundle.schema.silver: ${var.env}_${var.developer}_silver
-        bundle.schema.gold:   ${var.env}_${var.developer}_gold
-        bundle.sourcePath: ${workspace.file_path}
+        bundle.schema.bronze: ${var.schema_bronze}
+        bundle.schema.silver: ${var.schema_silver}
+        bundle.schema.gold:   ${var.schema_gold}
+        bundle.sourcePath:    ${workspace.file_path}
 
-      # ── libraries ──────────────────────────────────────────────────
-      libraries:
+      libraries:              # ← indented under pipeline ✅
         - notebook:
             path: ../src/silver/pipelines/generate_date.py
-        - whl:
-            artifact: common_utils_lib        # DAB resolves path automatically
 
-      # ── channel ────────────────────────────────────────────────────
-      channel: CURRENT
 
-      # ── continuous vs triggered ────────────────────────────────────
-      continuous: false                       # triggered mode — job controls it
+      channel: CURRENT        # ← indented under pipeline ✅
+      continuous: false       # ← indented under pipeline ✅

@@ -3,21 +3,24 @@ resources:
     bronze_job:
       name: bronze_job
 
-      tasks:
-        - task_key: bronze_task
-
-          notebook_task:
-            notebook_path: ../src/bronze/pipelines/ingest_bronze.py   # no .py
-            base_parameters:
-              config: config/bronze_ingestion.json
-              catalog: ${var.catalog}
-              schema: ${var.schema_bronze}
-
-          environment_key: my_env
-
+      # ── Step 1: Define named environment at job level ──────────
       environments:
         - environment_key: my_env
           spec:
-            environment_version: "3"
+            client: "3"
             dependencies:
-              - /Volumes/ai_dev_db/dev_msingh_bronze/libs/platform_libs/common_utils-0.1.0-py3-none-any.whl
+              - /Volumes/db/bronze/libs/platform_libs/common_utils-1.0.0-py3-none-any.whl
+
+      tasks:
+        - task_key: bronze_task
+          # ── Step 2: Reference it in the task ───────────────────
+          environment_key: my_env
+
+          notebook_task:
+            notebook_path: ../src/bronze/pipelines/ingest_bronze.py
+            base_parameters:
+              config: config/bronze_ingestion.json
+              catalog: ${var.catalog}
+              schema:  ${var.schema_bronze}
+
+      serverless: true

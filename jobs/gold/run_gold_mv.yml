@@ -8,7 +8,7 @@ resources:
           spec:
             environment_version: "3"
             dependencies:
-              - /Volumes/${var.catalog}/${var.bronze_schema}/libs/platform_libs/common_utils-0.1.0-py3-none-any.whl
+              - /Volumes/db/bronze/libs/platform_libs/common_utils-1.0.0-py3-none-any.whl
               - databricks-sql-connector
 
       tasks:
@@ -20,7 +20,7 @@ resources:
             notebook_path: ${workspace.file_path}/src/gold/pipelines/get_active_gold_tables
             base_parameters:
               catalog:     "${var.catalog}"
-              gold_schema: "${var.gold_schema}"
+              gold_schema: "${var.schema_gold}"
 
         # ── Task 2: ForEach over emitted gold_tables list ────────────────
         - task_key: run_gold_mv
