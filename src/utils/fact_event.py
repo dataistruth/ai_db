@@ -2,10 +2,37 @@ import json
 import os
 import random
 from datetime import datetime, timedelta
-from faker import Faker
+import subprocess
 import uuid
+import sys
 
-base_path = "/Users/mukesh.singh/spark/ai_db/data/raw/claim_event_raw"
+def is_databricks():
+    return "DATABRICKS_RUNTIME_VERSION" in os.environ
+
+# -------------------------------
+# Ensure Faker is Installed (Databricks Serverless)
+# -------------------------------
+def ensure_faker():
+    try:
+        from faker import Faker
+    except ImportError:
+        if is_databricks():
+            print("Installing faker in Databricks environment...")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "faker"])
+        else:
+            raise
+
+ensure_faker()
+# Now safe to import
+from faker import Faker
+
+
+if is_databricks():
+    base_path = "/Volumes/db/bronze/raw"
+else:
+    base_path = "/Users/mukeshsingh/spark/ai_db/data/raw"
+
+
 fake = Faker()
 
 
