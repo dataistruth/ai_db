@@ -8,6 +8,7 @@ transform_dim_plan, transform_dim_prescriber )
 from silver.transform.transform_fact import transform_fact_claim
 from common_utils.constants import ALL_AUDIT_COLS
 from pyspark.sql.functions import col, expr
+from pyspark.sql import functions as F
 
 
 # ── Read bundle-injected config ──────────────────────────────────────
@@ -124,23 +125,33 @@ dlt.apply_changes(
     except_column_list = ["insert_ts"]
 )
 
-
-@dlt.table(name="fact_claim")
+@dlt.table(
+    name="fact_claim",
+    partition_cols=["fill_date"],
+    table_properties={
+        "delta.enableChangeDataFeed": "true"
+    }
+)
+@dlt.expect_all_or_drop({
+    "member_sk_not_null": "member_sk IS NOT NULL",
+    "plan_sk_not_null": "plan_sk IS NOT NULL"
+})
 def fact_claim():
-    bronze_table = f"{catalog}.{schema_bronze}.fact_raw"
-    input_df=dlt.read_table(bronze_table)
-    member_sk_df = dlt.read_table("d_member").select("member_id","member_sk")
-    plan_sk_df = dlt.read_table("d_plan").select("plan_id","plan_sk")
-    prescriber_sk_df = dlt.read_table("d_prescriber").select("prescriber_id","prescriber_sk")
-    drug_sk_df = dlt.read_table("d_drug").select("drug_code","drug_sk")
-    date_df = dlt.read_table("d_date")
-    return(input_df
-       .transform(transform_fact_claim,
-                  member_sk_df,
-                  plan_sk_df,
-                  prescriber_sk_df,
-                  drug_sk_df,
-                  date_df)
-
+    bronze_table = f"{catalog}.{schema_bronze}.claim_event_raw"
+    # Read the only delta table
+    input_df = dlt.read_stream(bronze_table)
+    member_sk_df = dlt.read("d_member").select("member_id", "member_sk").filter(F.col("__END_AT").isNull())
+    plan_sk_df = dlt.read("d_plan").select("plan_id", "plan_sk").filter(F.col("__END_AT").isNull())
+    prescriber_sk_df = dlt.read("d_prescriber").filter(F.col("__END_AT").isNull())
+    drug_sk_df = dlt.read("d_drug").select("drug_code", "drug_sk").filter(F.col("__END_AT").isNull())
+    date_df = dlt.read("d_date")
+    return (
+        input_df.transform(
+            transform_fact_claim,
+            member_sk_df,
+            plan_sk_df,
+            prescriber_sk_df,
+            drug_sk_df,
+            date_df,
+        )
     )
-

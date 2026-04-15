@@ -1,0 +1,39 @@
+resources:
+  jobs:
+    gold_mv_orchestrator:
+      name: gold_mv_orchestrator_${var.env}
+
+      environments:
+        - environment_key: my_env
+          spec:
+            environment_version: "3"
+            dependencies:
+              - /Volumes/${var.catalog}/${var.bronze_schema}/libs/platform_libs/common_utils-0.1.0-py3-none-any.whl
+              - databricks-sql-connector
+
+      tasks:
+
+        # ── Task 1: Read active gold tables, emit task values ────────────
+        - task_key: get_active_gold_tables
+          environment_key: my_env
+          notebook_task:
+            notebook_path: ${workspace.file_path}/src/gold/pipelines/get_active_gold_tables
+            base_parameters:
+              catalog:     "${var.catalog}"
+              gold_schema: "${var.gold_schema}"
+
+        # ── Task 2: ForEach over emitted gold_tables list ────────────────
+        - task_key: run_gold_mv
+          depends_on:
+            - task_key: get_active_gold_tables
+          for_each_task:
+            inputs: "{{tasks.get_active_gold_tables.values.gold_tables}}"
+            concurrency: 1
+            task:
+              task_key: execute_gold_mv
+              environment_key: my_env
+              notebook_task:
+                notebook_path: ${workspace.file_path}/src/gold/pipelines/execute_gold_mv
+                base_parameters:
+                  gold_table: "{{input}}"
+                  http_path: "${var.warehouse_http_path}"

@@ -1,0 +1,31 @@
+resources:
+  jobs:
+    register_gold_table_properties:
+      name: register_gold_table_properties_${var.env}_${var.developer}
+
+      tasks:
+        - task_key: register_gold_table_properties
+          notebook_task:
+            notebook_path: ${workspace.file_path}/src/gold/transform/register_gold_table_properties
+            base_parameters:
+              catalog: "${var.catalog}"
+              gold_schema: "${var.gold_schema}"
+              silver_schema: "${var.silver_schema}"
+              bronze_schema: "${var.bronze_schema}"
+              env: "${var.env}"
+              sql_dir: "${workspace.file_path}/src/gold/sql"
+
+
+          environment_key: my_env
+
+      environments:
+        - environment_key: my_env
+          spec:
+            environment_version: "3"
+            dependencies:
+              - /Volumes/${var.catalog}/${var.env}_${var.developer}_bronze/libs/platform_libs/common_utils-1.0.0-py3-none-any.whl
+
+      schedule:
+        quartz_cron_expression: "0 0 0 1 1 ? 2099"
+        timezone_id: "UTC"
+        pause_status: PAUSED
