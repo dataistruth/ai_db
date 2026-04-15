@@ -11,7 +11,7 @@ resources:
             base_parameters:
               config: config/bronze_ingestion.json
               catalog: ${var.catalog}
-              schema: ${resources.schemas.bronze_schema.name}
+              schema: ${var.schema_bronze}
 
           environment_key: my_env
 

@@ -32,7 +32,7 @@ from faker import Faker
 
 
 if is_databricks():
-    BASE_PATH = "/Volumes/ai_dev_db/dev_msingh_bronze/raw"
+    BASE_PATH = "/Volumes/db/bronze/raw"
 else:
     BASE_PATH = "/Users/mukeshsingh/spark/ai_db/data/raw"
 
