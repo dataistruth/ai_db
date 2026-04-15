@@ -2,9 +2,9 @@
 import dlt
 import sys
 from pyspark.sql.functions import col
+
 sys.path.insert(0, spark.conf.get("bundle.sourcePath") + "/src")
 from common_utils.common.date import generate_date_dim
-
 # ── Read bundle-injected config ──────────────────────────────────────
 catalog       = spark.conf.get("bundle.catalog")
 env           = spark.conf.get("bundle.env")

@@ -5,6 +5,7 @@ bundle:
 include:
   - resources/*.yml
   - jobs/*.yml
+  - jobs/*/*.yml
 
 artifacts:
   common_utils_lib:
@@ -46,6 +47,10 @@ variables:
   schema_gold:
       description: Gold schema
       default: gold
+
+  warehouse_http_path:
+      description: "SQL Warehouse HTTP path for gold MV execution"
+      default: ""
 
 
 
@@ -89,6 +94,7 @@ targets:
       schema_bronze: bronze
       schema_silver: silver
       schema_gold: gold
+      warehouse_http_path : "/sql/1.0/warehouses/84c0aa3ea1852c0a"
       # shared schemas in prod
 
 # ── sync local files to workspace ────────────────────────────────────────

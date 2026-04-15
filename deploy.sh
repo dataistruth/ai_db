@@ -69,7 +69,7 @@ echo "👉 Wheel: $WHEEL_PATH"
 # ── Paths ───────────────────────────────────────────────
 DIR_PATH="dbfs:/Volumes/$CATALOG/$SCHEMA/libs/platform_libs"
 WHEEL_PATH_DBFS="$DIR_PATH/common_utils-latest.whl"
-WHEEL_VERSION_PATH_DBFS="$DIR_PATH/common_utils-0.1.0-py3-none-any.whl"
+WHEEL_VERSION_PATH_DBFS="$DIR_PATH/common_utils-1.0.0-py3-none-any.whl"
 
 echo "📁 Ensuring directory exists: $DIR_PATH"
 

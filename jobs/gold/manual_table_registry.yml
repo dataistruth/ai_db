@@ -9,9 +9,9 @@ resources:
             notebook_path: ${workspace.file_path}/src/gold/transform/register_gold_table_properties
             base_parameters:
               catalog: "${var.catalog}"
-              gold_schema: "${var.gold_schema}"
-              silver_schema: "${var.silver_schema}"
-              bronze_schema: "${var.bronze_schema}"
+              gold_schema: "${var.schema_gold}"
+              silver_schema: "${var.schema_silver}"
+              bronze_schema: "${var.schema_bronze}"
               env: "${var.env}"
               sql_dir: "${workspace.file_path}/src/gold/sql"
 
@@ -23,7 +23,7 @@ resources:
           spec:
             environment_version: "3"
             dependencies:
-              - /Volumes/${var.catalog}/${var.env}_${var.developer}_bronze/libs/platform_libs/common_utils-1.0.0-py3-none-any.whl
+              - /Volumes/db/bronze/libs/platform_libs/common_utils-1.0.0-py3-none-any.whl
 
       schedule:
         quartz_cron_expression: "0 0 0 1 1 ? 2099"

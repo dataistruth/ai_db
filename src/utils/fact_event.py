@@ -29,11 +29,6 @@ ensure_faker()
 from faker import Faker
 
 
-if is_databricks():
-    base_path = "/Volumes/db/bronze/raw"
-else:
-    base_path = "/Users/mukeshsingh/spark/ai_db/data/raw"
-
 
 fake = Faker()
 
