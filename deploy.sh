@@ -39,9 +39,11 @@ echo "👉 Schema: $SCHEMA"
 
 # ── Step 3: Resolve catalog (env-based) ─────────────────
 if [ "$TARGET" == "dev" ]; then
-  CATALOG="ai_dev_db"
+  CATALOG="dev_db"
 elif [ "$TARGET" == "qa" ]; then
-  CATALOG="ai_qa_db"
+  CATALOG="qa_db"
+elif [ "$TARGET" == "prod" ]; then
+  CATALOG="db"
 else
   CATALOG="ai_db"
 fi
@@ -67,6 +69,7 @@ echo "👉 Wheel: $WHEEL_PATH"
 # ── Paths ───────────────────────────────────────────────
 DIR_PATH="dbfs:/Volumes/$CATALOG/$SCHEMA/libs/platform_libs"
 WHEEL_PATH_DBFS="$DIR_PATH/common_utils-latest.whl"
+WHEEL_VERSION_PATH_DBFS="$DIR_PATH/common_utils-0.1.0-py3-none-any.whl"
 
 echo "📁 Ensuring directory exists: $DIR_PATH"
 
@@ -75,8 +78,13 @@ databricks fs mkdirs "$DIR_PATH" --profile "$PROFILE"
 
 echo "📤 Uploading to: $WHEEL_PATH_DBFS"
 
-# ── Upload wheel ───────────────────────────────────────
+# ── Upload wheel as latest ───────────────────────────────────────
 databricks fs cp "$WHEEL_PATH" "$WHEEL_PATH_DBFS" \
+  --overwrite \
+  --profile "$PROFILE"
+
+  # ── Upload wheel as versioned  ───────────────────────────────────────
+databricks fs cp "$WHEEL_PATH" "$WHEEL_VERSION_PATH_DBFS" \
   --overwrite \
   --profile "$PROFILE"
 

@@ -5,20 +5,23 @@ resources:
       description: " Runs the date creation DLT pipeline — ${var.env}"
 
       catalog: ${var.catalog}
-      target:  ${var.env}_${var.developer}_silver        # schema where DLT publishes tables
+      target:  ${var.schema_silver}        # schema where DLT publishes tables
 
       serverless: true
-      environment:
-          dependencies:
-            - ${var.libs_volume}/common_utils-1.0.0-py3-none-any.whl
+      environments:
+        - environment_key: my_env
+          spec:
+            environment_version: "3"
+            dependencies:
+              - /Volumes/${var.catalog}/${var.schema_bronze}/libs/platform_libs/common_utils-0.1.0-py3-none-any.whl
       # ── bundle-injected spark conf ─────────────────────────────────
       configuration:
         bundle.catalog:       ${var.catalog}
         bundle.env:           ${var.env}
         bundle.developer:     ${var.developer}
-        bundle.schema.bronze: ${var.env}_${var.developer}_bronze
-        bundle.schema.silver: ${var.env}_${var.developer}_silver
-        bundle.schema.gold:   ${var.env}_${var.developer}_gold
+        bundle.schema.bronze: ${var.schema_bronze}
+        bundle.schema.silver: ${var.schema_silver}
+        bundle.schema.gold:   ${var.schema_gold}
         bundle.sourcePath: ${workspace.file_path}
 
       # ── libraries ──────────────────────────────────────────────────

@@ -82,7 +82,7 @@ targets:
       profile: prod_w
       root_path: /Workspace/Users/msingh.chicago26@protonmail.com/.bundle/${bundle.name}/${bundle.target}
     variables:
-      libs_volume: /Volumes/db/shared/libs/platform_libs
+      libs_volume: /Volumes/db/bronze/libs/platform_libs
       catalog: db
       env: prod
       developer: shared
