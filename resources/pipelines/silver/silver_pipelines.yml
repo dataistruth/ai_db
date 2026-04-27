@@ -20,11 +20,12 @@ resources:
         bundle.schema.silver: ${var.schema_silver}
         bundle.schema.gold:   ${var.schema_silver}
         bundle.sourcePath: ${workspace.file_path}
+        PYTHONPATH: ${workspace.file_path}/src
 
       # ── libraries ──────────────────────────────────────────────────
       libraries:
         - notebook:
-            path: ../src/silver/pipelines/pipeline_claim_group.py
+            path: ${workspace.file_path}/src/silver/pipelines/pipeline_claim_group
         - whl:
             artifact: common_utils_lib        # DAB resolves path automatically
 

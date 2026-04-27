@@ -3,9 +3,11 @@ bundle:
 
 # ── include all resource yml files ───────────────────────────────────────
 include:
-  - resources/*.yml
-  - jobs/*.yml
-  - jobs/*/*.yml
+  - resources/jobs/bronze/*.yml
+  - resources/jobs/silver/*.yml
+  - resources/jobs/gold/*.yml
+  - resources/pipelines/*.yml
+  - resources/pipelines/silver/*.yml
 
 artifacts:
   common_utils_lib:

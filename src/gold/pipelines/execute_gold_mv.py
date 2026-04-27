@@ -66,6 +66,12 @@ with JobLogger(
     logger.log(f"Starting refresh: {schema}.{table_nm}")
     logger.log(f"SQL preview: {resolved_sql[:120]}")
 
+catalog="db"
+# ── Connect to SQL Warehouse and execute ─────────────────────────────
+def mv_exists(cur, schema, table_nm):
+    cur.execute(f"SHOW TABLES IN {catalog}.{schema} LIKE '{table_nm}'")
+    return cur.fetchone() is not None
+
 # ── Connect to SQL Warehouse and execute ─────────────────────────────
 with sql.connect(
     server_hostname = workspace_url,
@@ -73,8 +79,17 @@ with sql.connect(
     access_token    = token
 ) as conn:
     with conn.cursor() as cur:
-        print(f"Executing: {resolved_sql}")
-        cur.execute(resolved_sql)
-        print(f"✅ Done: {schema}.{table_nm}")
+
+        if mv_exists(cur, schema, table_nm):
+            exec_sql = f"REFRESH MATERIALIZED VIEW {catalog}.{schema}.{table_nm}"
+            action   = "REFRESH"
+        else:
+            exec_sql = resolved_sql          # full CREATE OR REPLACE DDL
+            action   = "CREATE"
+
+        print(f"Action   : {action}")
+        print(f"Executing: {exec_sql[:120]}")
+        cur.execute(exec_sql)
+        print(f"✅ Done [{action}]: {schema}.{table_nm}")
 
 logger.log(f"Completed: {schema}.{table_nm}")

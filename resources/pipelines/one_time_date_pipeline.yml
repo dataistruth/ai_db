@@ -23,7 +23,7 @@ resources:
 
       libraries:              # ← indented under pipeline ✅
         - notebook:
-            path: ../src/silver/pipelines/generate_date.py
+            path: ${workspace.file_path}/src/silver/pipelines/generate_date.py
 
 
       channel: CURRENT        # ← indented under pipeline ✅

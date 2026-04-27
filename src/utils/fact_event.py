@@ -33,7 +33,7 @@ from faker import Faker
 fake = Faker()
 
 if "DATABRICKS_RUNTIME_VERSION" in os.environ:
-    base_path = "/Volumes/ai_dev_db/dev_msingh_bronze/raw/claim_event_raw"
+    base_path = "/Volumes/db/bronze/raw/claim_event_raw"
 else:
     base_path = "/Users/mukeshsingh/spark/ai_db/data/raw/claim_event_raw"
 

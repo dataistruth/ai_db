@@ -8,7 +8,7 @@ resources:
           spec:
             environment_version: "3"
             dependencies:
-              - /Volumes/db/bronze/libs/platform_libs/common_utils-1.0.0-py3-none-any.whl
+              - ${var.libs_volume}/common_utils-1.0.0-py3-none-any.whl
               - databricks-sql-connector
 
       tasks:

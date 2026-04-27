@@ -9,7 +9,7 @@ resources:
           spec:
             client: "3"
             dependencies:
-              - /Volumes/db/bronze/libs/platform_libs/common_utils-1.0.0-py3-none-any.whl
+              - ${var.libs_volume}/common_utils-1.0.0-py3-none-any.whl
 
       tasks:
         - task_key: bronze_task
